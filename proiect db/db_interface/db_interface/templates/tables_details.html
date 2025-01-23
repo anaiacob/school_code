@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Details: {{ table_name }}</title>
+    <style>
+        /* Reset general */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('static/tables.jpg'); /* Imagine de fundal */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f1f1f1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        h2 {
+            font-size: 3rem;
+            color: #d3a15c; /* Galben cald */
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundal alb pentru tabel */
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        th {
+            background-color: #b89d7d; /* Bej deschis pentru capul de tabel */
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f4f4f4; /* Culoare de fundal alternantă pentru rânduri */
+        }
+
+        tr:hover {
+            background-color: #e0d6b0; /* Culoare la hover pe rânduri */
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #b89d7d; /* Bej pentru butonul de întoarcere */
+            color: white;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #8e7a5a; /* Maro închis la hover */
+        }
+    </style>
+</head>
+<body>
+    <h2>Table Details: {{ table_name }}</h2>
+
+    <!-- Table display -->
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in col_names %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/tables">Back to Main Menu</a>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interogări SQL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interogări SQL și Gestionare Tabele</h1>
+
+    <!-- Afișarea tabelelor -->
+    {% if tables %}
+        {% for table, table_data in tables.items() %}
+            <h2>Tabel: {{ table }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in table_data.columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table_data.rows %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Form pentru INSERT -->
+            <form method="post">
+                <input type="hidden" name="table" value="{{ table }}">
+                <input type="hidden" name="action" value="insert">
+                <p>
+                    Inserare: 
+                    <label>Coloane (virgule): <input type="text" name="columns" required></label>
+                    <label>Valori (virgule): <input type="text" name="values" required></label>
+                </p>
+                <button type="submit">Inserare</button>
+            </form>
+
+            <!-- Form pentru UPDATE -->
+            <form method="post">
+                <input type="hidden" name="table" value="{{ table }}">
+                <input type="hidden" name="action" value="update">
+                <p>
+                    Update:
+                    <label>SET: <input type="text" name="set" placeholder="ex: coloana='valoare'" required></label>
+                    <label>WHERE: <input type="text" name="where" placeholder="condiție" required></label>
+                </p>
+                <button type="submit">Update</button>
+            </form>
+
+            <!-- Form pentru DELETE -->
+            <form method="post">
+                <input type="hidden" name="table" value="{{ table }}">
+                <input type="hidden" name="action" value="delete">
+                <p>
+                    Ștergere:
+                    <label>WHERE: <input type="text" name="where" placeholder="condiție" required></label>
+                </p>
+                <button type="submit">Ștergere</button>
+            </form>
+        {% endfor %}
+    {% else %}
+        <p>Nu există tabele de afișat.</p>
+    {% endif %}
+
+    <!-- Secțiune pentru interogări SQL personalizate -->
+    <h2>Interogări SQL personalizate</h2>
+    <form method="post">
+        <input type="hidden" name="action" value="query">
+        <textarea name="sql_query" rows="4" cols="50" placeholder="Scrie interogarea SQL aici..." required></textarea>
+        <br>
+        <button type="submit">Execută</button>
+    </form>
+
+    <!-- Afișarea rezultatelor interogării personalizate -->
+    {% if interogare_rezultat %}
+        <h3>Rezultatele interogării</h3>
+        <table>
+            <thead>
+                <tr>
+                    {% for col in interogare_rezultat.columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in interogare_rezultat.rows %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if interogare_erori %}
+        <p class="error">Eroare: {{ interogare_erori }}</p>
+    {% endif %}
+    <style>
+        /* Reset general */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('/static/tables.jpg'); /* Imaginea de fundal */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f1f1f1;
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        h1, h2 {
+            color: #ffd700; /* Galben auriu pentru titluri */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+    
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-out;
+        }
+    
+        h2 {
+            font-size: 2.5rem;
+            margin: 20px 0;
+        }
+    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.8); /* Fundal negru translucid */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+    
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Linie subtilă albă */
+            color: #ffffff; /* Text alb pentru lizibilitate */
+        }
+    
+        th {
+            background-color: rgba(255, 215, 0, 0.8); /* Galben auriu translucid */
+            font-weight: bold;
+        }
+    
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1); /* Gri deschis translucid */
+        }
+    
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Gri deschis mai pronunțat */
+        }
+    
+        form {
+            background-color: rgba(0, 0, 0, 0.8); /* Fundal negru translucid */
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 800px;
+        }
+    
+        form p {
+            margin-bottom: 15px;
+        }
+    
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundal alb translucid */
+            color: #333; /* Text negru */
+        }
+    
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        textarea {
+            resize: vertical;
+        }
+    
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+    
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    
+        /* Animatie pentru titluri */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    
+    
+</body>
+</html>
