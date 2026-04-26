@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Rețeaua Logistică</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo-circle">✈️</div>
+            <div class="header-text-group">
+                <h1>Dashboard Rețeaua Logistică</h1>
+                <p class="header-subtitle">Simulare flux kituri & evenimente zbor</p>
+            </div>
+        </div>
+
+        <div class="time-controls">
+            <button id="reports-button" class="btn btn-secondary btn-ghost">
+                📊 Raport Costuri & Penalizări
+            </button>
+
+            <div class="time-display-group">
+                <span id="current-day" class="time-label">Ziua 0</span>
+                <div class="control-buttons">
+                    <button id="prev-day" class="btn btn-sm" title="Ziua anterioară">&laquo;</button>
+                    <button id="next-day" class="btn btn-sm" title="Ziua următoare">&raquo;</button>
+                </div>
+            </div>
+
+            <div class="time-display-group">
+                <span id="current-hour" class="time-label">Ora 0:00</span>
+                <div class="control-buttons">
+                    <button id="prev-hour" class="btn btn-sm" title="Ora anterioară">&lsaquo;</button>
+                    <button id="next-hour" class="btn btn-sm" title="Ora următoare">&rsaquo;</button>
+                </div>
+            </div>
+
+            <div class="time-meta">
+                <span id="max-time" class="time-label-max">/ Simulat: N/A</span>
+                <span class="divider-dot">•</span>
+                <span class="time-label-max">
+                    Zboruri active: <strong id="active-flights-count">0</strong>
+                </span>
+            </div>
+
+            <button id="dark-mode-toggle" class="btn btn-icon" title="Comută Dark / Light">
+                🌙
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SECȚIUNE STÂNGA: Harta Rețea -->
+        <section class="visualizer-section">
+            <div class="panel-header">
+                <div>
+                    <h2>Hartă Rețea Logistică</h2>
+                    <p class="panel-subtitle">
+                        Status kituri & puncte critice pe nodurile rețelei
+                    </p>
+                </div>
+                <div class="panel-kpis">
+                    <div class="kpi-chip">
+                        <span class="kpi-label">Mod Filtrare</span>
+                        <div class="kpi-toggle">
+                            <button id="auto-filter-btn" class="chip-btn chip-btn-active">Automat</button>
+                            <button id="manual-filter-btn" class="chip-btn">Manual</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visualizer-meta-row">
+                <div class="legend">
+                    <div><span class="dot dot-green"></span> Operațiune normală (stoc ok)</div>
+                    <div><span class="dot dot-yellow"></span> Transfer / stoc în scădere</div>
+                    <div><span class="dot dot-red"></span> Criză / sub-stoc / supra-capacitate</div>
+                </div>
+                <div class="legend secondary-legend">
+                    <div><span class="badge badge-soft">HUB</span> nod central rețea</div>
+                    <div><span class="badge badge-outline">Spoke</span> aeroport regional</div>
+                </div>
+            </div>
+
+            <div id="network-visualizer" class="network-wrapper">
+                <canvas id="network-canvas" width="800" height="600"></canvas>
+                <div id="tooltip" class="node-tooltip"></div>
+            </div>
+
+            <p class="hint-text">
+                💡 Hint: treci cu mouse-ul peste noduri pentru detalii, folosește butoanele de timp
+                pentru a „derula” simularea.
+            </p>
+        </section>
+
+        <!-- SECȚIUNE DREAPTA: Filtrare & Evenimente -->
+        <section class="report-summary">
+            <h2>Filtrare & Evenimente</h2>
+
+            <div class="filter-card">
+                <div class="filter-header">
+                    <span class="filter-title">Aeroporturi afișate</span>
+                    <span class="filter-count">
+                        Selectate: <strong id="selected-count">0</strong> /
+                        <span id="total-airports-count">0</span>
+                    </span>
+                </div>
+
+                <div class="filter-body">
+                    <input
+                        type="text"
+                        id="airport-search"
+                        class="input-control"
+                        placeholder="Caută aeroport (ex. HUB1, ZHVK)..."
+                    />
+
+                    <select
+                        id="airport-selector"
+                        multiple
+                        size="10"
+                        class="airport-select"
+                    >
+                    </select>
+
+                    <div class="filter-actions">
+                        <button id="select-all-btn" class="btn btn-sm">Selectează tot</button>
+                        <span class="filter-hint">
+                            ⓘ În modul <strong>Automat</strong>, lista se ajustează după activitate.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-card">
+                <div class="events-header">
+                    <h3>Evenimente Zbor (ora curentă)</h3>
+                    <span id="events-count-pill" class="events-count-pill">0 zboruri</span>
+                </div>
+                <div id="flight-events-list" class="events-list">
+                    <p class="empty-state">
+                        Nu există evenimente de zbor la ora curentă.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <span>Simulare logistică – Hackathon / PoC</span>
+        <span class="footer-dot">•</span>
+        <span>Vizualizare interactivă în browser</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

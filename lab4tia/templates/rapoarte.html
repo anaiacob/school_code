@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raport Costuri & Penalizări</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            padding-top: 0;
+        }
+        .report-shell {
+            max-width: 960px;
+            margin: 18px auto 32px;
+            padding: 16px 18px 20px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+            box-shadow: 0 18px 45px rgba(15,23,42,0.65);
+            backdrop-filter: blur(18px);
+        }
+        .report-shell h2 {
+            margin-top: 0;
+            margin-bottom: 6px;
+            font-size: 1.1rem;
+        }
+        .report-meta {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 16px;
+        }
+        .report-card {
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: rgba(15,23,42,0.9);
+            font-size: 0.85rem;
+        }
+        .report-card h3 {
+            margin: 0 0 6px;
+            font-size: 0.95rem;
+        }
+        .pill {
+            display: inline-flex;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            margin-left: 6px;
+        }
+        .pill-warning {
+            border-color: #eab308;
+            color: #eab308;
+        }
+        .pill-danger {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        #penalties-list p {
+            margin: 0 0 4px;
+        }
+        @media (max-width: 800px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo-circle">💰</div>
+            <div class="header-text-group">
+                <h1>Raport Financiar Simulare</h1>
+                <p class="header-subtitle">Costuri totale & penalizări generate de scenariu</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="report-shell">
+        <h2>Rezumat Costuri & Penalizări</h2>
+        <p class="report-meta">
+            Datele provin din aceeași rulare a simulării care a generat <strong>viz_data.json</strong>.
+        </p>
+
+        <div class="report-grid">
+            <section class="report-card">
+                <h3>Total Cost Simulare <span class="pill pill-danger">placeholder</span></h3>
+                <p id="total-cost-display">Total Cost: N/A (nu este exportat încă din app.py)</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">
+                    Pentru valori exacte, verifică output-ul din terminalul în care rulează
+                    <code>app.py</code>. Poți extinde formatul lui <code>viz_data.json</code> pentru a include aici suma totală.
+                </p>
+            </section>
+
+            <section class="report-card">
+                <h3>Detalii Penalizări <span class="pill pill-warning">work in progress</span></h3>
+                <div id="penalties-list">
+                    <p>Se încarcă datele...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        async function loadReportData() {
+            try {
+                const response = await fetch('viz_data.json');
+                const data = await response.json();
+
+                // În acest moment app.py nu exportă penalitățile în JSON.
+                // Afișăm un mesaj clar pentru utilizator.
+                document.getElementById('penalties-list').innerHTML =
+                    `<p style="color: #facc15; font-size: 0.82rem;">
+                        Atenție: detaliile despre costuri și penalizări <strong>nu sunt încă exportate</strong>
+                        în <code>viz_data.json</code> de către <code>app.py</code>.<br>
+                        Consultă terminalul Python sau extinde logica din backend pentru a include
+                        aici date agregate (ex: cost total, penalizări pe cod, etc.).
+                    </p>`;
+            } catch (e) {
+                document.getElementById('penalties-list').innerHTML =
+                    `<p style="color: #f97373;">Eroare la încărcarea datelor de raport: ${e.message}</p>`;
+            }
+        }
+
+        loadReportData();
+    </script>
+</body>
+</html>
